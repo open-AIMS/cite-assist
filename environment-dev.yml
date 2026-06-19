@@ -1,0 +1,6 @@
+name: cite-assist-dev
+channels:
+  - conda-forge
+dependencies:
+  - python 3.13
+  - pytest 9.0.2

@@ -1,0 +1,11 @@
+# Optional dependencies for refcite.
+#
+# The baseline (Stage 1: BM25 search, CSL-JSON + local-API sync, APA output)
+# needs NOTHING here — it runs on system Python 3.11+ with the standard library
+# only.
+#
+# Install this ONLY if you want the PyMuPDF fallback that extracts text from a
+# PDF attachment when Zotero has no indexed full text for it (DESIGN.md D5).
+# Zotero's own full-text API is tried first, so most libraries never need this.
+
+PyMuPDF>=1.23

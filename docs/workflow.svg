@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1090" viewBox="0 0 800 1090" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#ea580c"/>
+    </marker>
+    <marker id="arrowGrey" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="800" height="1090" fill="#ffffff"/>
+  <text x="400" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">cite-assist workflow</text>
+  <text x="400" y="54" text-anchor="middle" font-size="13" fill="#64748b">who does what: orchestration agent vs the refcite Python application</text>
+
+  <!-- ============ main column boxes ============ -->
+  <!-- 1 author -->
+  <rect x="50" y="74" width="440" height="50" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="270" y="104" text-anchor="middle" font-size="14" fill="#0f172a">1.  Author selects text in the report</text>
+
+  <!-- 2 agent -->
+  <rect x="50" y="152" width="440" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="270" y="182" text-anchor="middle" font-size="14" fill="#0f172a">2.  Agent proposes the citable statements</text>
+
+  <!-- 3 author -->
+  <rect x="50" y="230" width="440" height="50" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="270" y="260" text-anchor="middle" font-size="14" fill="#0f172a">3.  Author confirms, drops or adds statements</text>
+
+  <!-- 4 agent -->
+  <rect x="50" y="308" width="440" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="270" y="338" text-anchor="middle" font-size="14" fill="#0f172a">4.  Agent writes  work/claims.json</text>
+
+  <!-- 5 agent runs search -->
+  <rect x="50" y="386" width="440" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="270" y="409" text-anchor="middle" font-size="14" fill="#0f172a">5.  Agent runs:</text>
+  <text x="270" y="427" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#0f172a">python -m refcite search SESSION</text>
+
+  <!-- ===== outer box: one CLI call, three stages ===== -->
+  <rect x="50" y="462" width="440" height="192" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <text x="270" y="483" text-anchor="middle" font-size="12.5" font-weight="600" fill="#9a3412">one  refcite search  call &#8212; three stages, run automatically</text>
+
+  <!-- inner A: quick-sync -->
+  <rect x="70" y="494" width="400" height="42" rx="7" fill="#ffedd5" stroke="#ea580c" stroke-width="1.3"/>
+  <text x="270" y="520" text-anchor="middle" font-size="13" fill="#0f172a">Quick-sync the local cache (best effort)</text>
+
+  <!-- inner B: refresh index -->
+  <rect x="70" y="546" width="400" height="42" rx="7" fill="#ffedd5" stroke="#ea580c" stroke-width="1.3"/>
+  <text x="270" y="566" text-anchor="middle" font-size="13" fill="#0f172a">Refresh the RAG index</text>
+  <text x="270" y="581" text-anchor="middle" font-size="11" fill="#475569">(embed only new / changed fragments)</text>
+
+  <!-- inner C: rank -->
+  <rect x="70" y="598" width="400" height="42" rx="7" fill="#ffedd5" stroke="#ea580c" stroke-width="1.3"/>
+  <text x="270" y="624" text-anchor="middle" font-size="13" fill="#0f172a">Rank every claim  &#8594;  write  review.md</text>
+
+  <!-- inner connector arrows -->
+  <g stroke="#ea580c" stroke-width="1.4" fill="none" marker-end="url(#arrowOrange)">
+    <line x1="270" y1="536" x2="270" y2="544"/>
+    <line x1="270" y1="588" x2="270" y2="596"/>
+  </g>
+
+  <!-- 6 agent reviews review.md (NEW) -->
+  <rect x="50" y="674" width="440" height="58" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="270" y="698" text-anchor="middle" font-size="14" fill="#0f172a">Agent reviews review.md &amp; shortlists the matches</text>
+  <text x="270" y="716" text-anchor="middle" font-size="12" fill="#475569">opens the cached record markdown when a candidate is close</text>
+
+  <!-- 7 author reviews -->
+  <rect x="50" y="752" width="440" height="58" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="270" y="776" text-anchor="middle" font-size="14" fill="#0f172a">6.  Author reviews review.md</text>
+  <text x="270" y="794" text-anchor="middle" font-size="12" fill="#475569">and chooses which candidates to keep</text>
+
+  <!-- 8 agent insert -->
+  <rect x="50" y="830" width="440" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="270" y="853" text-anchor="middle" font-size="14" fill="#0f172a">7.  Agent runs:</text>
+  <text x="270" y="871" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#0f172a">refcite insert SESSION --select C1a,C2b</text>
+
+  <!-- 9 refcite insert -->
+  <rect x="50" y="900" width="440" height="58" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="270" y="924" text-anchor="middle" font-size="14" fill="#0f172a">Insert APA in-text cites + append references</text>
+  <text x="270" y="942" text-anchor="middle" font-size="12" fill="#475569">(backs up each touched file first)</text>
+
+  <!-- 10 done -->
+  <rect x="50" y="978" width="440" height="50" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.5"/>
+  <text x="270" y="1001" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Done: citations in the report</text>
+  <text x="270" y="1019" text-anchor="middle" font-size="12" fill="#475569">session moves to  citations/done/</text>
+
+  <!-- ============ vertical arrows ============ -->
+  <g stroke="#475569" stroke-width="1.6" fill="none" marker-end="url(#arrow)">
+    <line x1="270" y1="124" x2="270" y2="150"/>
+    <line x1="270" y1="202" x2="270" y2="228"/>
+    <line x1="270" y1="280" x2="270" y2="306"/>
+    <line x1="270" y1="358" x2="270" y2="384"/>
+    <line x1="270" y1="436" x2="270" y2="460"/>
+    <line x1="270" y1="654" x2="270" y2="672"/>
+    <line x1="270" y1="732" x2="270" y2="750"/>
+    <line x1="270" y1="810" x2="270" y2="828"/>
+    <line x1="270" y1="880" x2="270" y2="898"/>
+    <line x1="270" y1="958" x2="270" y2="976"/>
+  </g>
+
+  <!-- ============ external services (right) ============ -->
+  <!-- Zotero -->
+  <rect x="560" y="494" width="200" height="42" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="660" y="511" text-anchor="middle" font-size="13" fill="#334155">Zotero desktop</text>
+  <text x="660" y="527" text-anchor="middle" font-size="11" fill="#64748b">local API (127.0.0.1)</text>
+
+  <!-- LM Studio -->
+  <rect x="560" y="546" width="200" height="42" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="660" y="563" text-anchor="middle" font-size="13" fill="#334155">LM Studio</text>
+  <text x="660" y="579" text-anchor="middle" font-size="11" fill="#64748b">embeddings server</text>
+
+  <!-- report outputs -->
+  <rect x="560" y="904" width="200" height="50" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="660" y="927" text-anchor="middle" font-size="13" fill="#334155">report .md files</text>
+  <text x="660" y="944" text-anchor="middle" font-size="11" fill="#64748b">references.md</text>
+
+  <!-- branch arrows -->
+  <g stroke="#94a3b8" stroke-width="1.4" fill="none" marker-end="url(#arrowGrey)" marker-start="url(#arrowGrey)">
+    <line x1="490" y1="515" x2="560" y2="515"/>
+    <line x1="490" y1="567" x2="560" y2="567"/>
+  </g>
+  <g stroke="#94a3b8" stroke-width="1.4" fill="none" marker-end="url(#arrowGrey)">
+    <line x1="490" y1="929" x2="560" y2="929"/>
+  </g>
+
+  <!-- ============ legend ============ -->
+  <g font-size="12.5" fill="#0f172a">
+    <rect x="50" y="1048" width="18" height="14" rx="3" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="74" y="1060">Author (human)</text>
+    <rect x="190" y="1048" width="18" height="14" rx="3" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="214" y="1060">Orchestration agent</text>
+    <rect x="365" y="1048" width="18" height="14" rx="3" fill="#ffedd5" stroke="#ea580c"/>
+    <text x="389" y="1060">refcite (Python CLI)</text>
+    <rect x="545" y="1048" width="18" height="14" rx="3" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="3 2"/>
+    <text x="569" y="1060">External service / files</text>
+  </g>
+</svg>

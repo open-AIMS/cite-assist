@@ -1,0 +1,5 @@
+# Generated, machine-local artefacts from refcite — not for version control.
+zotero-cache/
+__pycache__/
+*.pyc
+.pytest_cache/

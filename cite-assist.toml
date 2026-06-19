@@ -1,0 +1,60 @@
+# cite-assist.toml — configuration for the refcite citation tool.
+# Relative session paths are resolved against the project root where you run
+# `python -m refcite`. See DESIGN.md and README.md.
+
+[zotero]
+# Zotero desktop local API. Zotero must be running for `refcite sync` to reach it.
+# Use 127.0.0.1, not "localhost": on Windows, "localhost" resolves to IPv6 ::1
+# first, but Zotero listens only on IPv4, so every request stalls ~2s waiting for
+# the IPv6 attempt to time out. 127.0.0.1 skips that and is ~100x faster.
+api_url = "http://127.0.0.1:23119"
+library_type = "user"     # "user" or "group"
+library_id = "0"          # the local API uses 0 for the logged-in user library
+# Optional fallback: a "File > Export > CSL JSON" file. Used when the live API
+# is unreachable, or explicitly via `refcite sync --from-csljson <file>`.
+csljson_export = ""
+# If more than this many items changed since the last sync, skip and warn
+# (run a manual full sync instead). Protects the "quick sync inside search".
+sync_max_delta = 1000
+
+[cache]
+# Where the offline library cache lives (records, manifest, search index).
+dir = "~/.cite-assist/zotero-cache"
+
+[search]
+backend = "bm25"          # "bm25" (default, stdlib) | "embeddings" | "hybrid"
+top_k = 8                 # candidates surfaced per claim
+# Zotero collections holding this project's own outputs (datasets, milestone
+# reports). `own-project` claims are biased toward — not restricted to — these.
+own_collections = ["NESP MaC 3.17"]
+own_bias = 1.25           # score multiplier applied to own_collections records
+# Absolute best-score floor below which a claim is flagged NEEDS SOURCE.
+# 0 disables it (BM25 scores are unbounded; leave at 0 unless you calibrate).
+needs_source_threshold = 0.0
+# Length (in words) of the supporting extract shown for each candidate in
+# review.md. Larger gives more context to judge relevance from the review file
+# alone; smaller keeps the file compact when scanning many candidates.
+extract_words = 120
+# Number of supporting extracts shown per candidate document. Showing the best
+# few distinct sections (not just the single top match) makes it easier to
+# judge whether a document is genuinely relevant.
+extracts_per_doc = 2
+# Minimum size (in words) of an index fragment. Smaller chunks (e.g. a lone
+# heading or a single short sentence) are merged into a neighbouring chunk so
+# every extract carries enough surrounding context to be meaningful.
+fragment_min_words = 30
+
+[embeddings]
+# Only used when backend = "embeddings" or "hybrid".
+server = "lmstudio"       # "lmstudio" (OpenAI-compatible) | "ollama"
+url = "http://localhost:1234"
+model = "text-embedding-embeddinggemma-300m-qat"
+# The embeddings index is written as this many shard files under
+# index/embeddings/ instead of one large JSON. Shards save partial progress
+# (a build resumes after an interruption) and stay small enough to inspect.
+num_shards = 20
+
+[sessions]
+# Citation sessions and the shared APA reference list.
+dir = "citations"
+references_file = "references.md"
