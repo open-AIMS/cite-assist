@@ -7,6 +7,13 @@ Zotero library. An agent (in VS Code) drives a small command-line tool that
 syncs a local cache of the library, searches it, and writes human-reviewable
 handoff files. Output citations are **APA style**.
 
+The workflow ships in two forms. This document describes **agent mode** (an LLM
+agent drives the loop through a generic harness and shells out to the `refcite`
+CLI). A second form, **app mode** (a lightweight Python desktop GUI owns the loop
+and makes two scoped LLM API calls), is specified in
+[`DESIGN-app-mode.md`](../agent-app/DESIGN-app-mode.md). Both reuse the same `refcite`
+backend unchanged.
+
 ---
 
 ## 1. Goals and non-goals

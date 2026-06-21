@@ -80,8 +80,17 @@ def _resolve(root: Path, value: str) -> Path:
     return p if p.is_absolute() else (root / p)
 
 
-def load_config(config_path: Path | None = None, repo_root: Path | None = None) -> Config:
-    """Load configuration from ``cite-assist.toml`` (or defaults if absent)."""
+def load_config(config_path: Path | None = None, repo_root: Path | None = None,
+                overrides: dict | None = None) -> Config:
+    """Load configuration from ``cite-assist.toml`` (or defaults if absent).
+
+    ``overrides`` (A35) is an optional flat dict of ``Config`` field names to
+    values, applied after the TOML is loaded. App mode passes the few settings
+    it owns (``backend``, ``emb_url``, ``emb_model``) this way so the GUI's
+    choice takes effect without writing a ``cite-assist.toml`` into the author's
+    report folder. The CLI passes none and is unaffected. Unknown keys are
+    ignored so a stale setting never breaks loading.
+    """
     config_path = Path(config_path) if config_path else DEFAULT_CONFIG_PATH
     data: dict = {}
     if config_path.is_file():
@@ -95,10 +104,10 @@ def load_config(config_path: Path | None = None, repo_root: Path | None = None) 
     e = data.get("embeddings", {})
     se = data.get("sessions", {})
 
-    return Config(
+    cfg = Config(
         repo_root=root,
         config_path=config_path,
-        zotero_api_url=z.get("api_url", "http://localhost:23119"),
+        zotero_api_url=z.get("api_url", "http://127.0.0.1:23119"),
         zotero_library_type=z.get("library_type", "user"),
         zotero_library_id=str(z.get("library_id", "0")),
         csljson_export=z.get("csljson_export", ""),
@@ -120,3 +129,9 @@ def load_config(config_path: Path | None = None, repo_root: Path | None = None) 
         references_file=_resolve(root, se.get("references_file", "references.md")),
         raw=data,
     )
+
+    if overrides:
+        for key, value in overrides.items():
+            if value is not None and hasattr(cfg, key):
+                setattr(cfg, key, value)
+    return cfg

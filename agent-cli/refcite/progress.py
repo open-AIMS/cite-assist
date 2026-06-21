@@ -31,25 +31,35 @@ class ProgressReporter:
     """
 
     def __init__(self, label: str, total: int, *, enabled: bool = True,
-                 stream=None, min_interval: float = 0.2):
+                 stream=None, min_interval: float = 0.2, on_progress=None):
         self.label = label
         self.total = max(0, int(total))
         self.stream = stream if stream is not None else sys.stderr
         self.enabled = enabled and self.total > 0
         self.min_interval = min_interval
+        # Optional ``on_progress(label, current, total)`` callback (A22). When
+        # set it fires alongside every emitted line, letting an embedding GUI
+        # surface live progress without scraping stderr. The CLI passes none and
+        # behaves exactly as before. A callback is honoured even when the stderr
+        # bar is disabled, so a quiet (verbose=False) operation still drives it.
+        self.on_progress = on_progress
         self.is_tty = bool(getattr(self.stream, "isatty", lambda: False)())
         self._last_emit = 0.0
         self._last_pct = -1
         self._started = False
 
+    @property
+    def _active(self) -> bool:
+        return self.enabled or self.on_progress is not None
+
     def start(self, suffix: str = "") -> None:
-        if not self.enabled:
+        if not self._active:
             return
         self._started = True
         self._emit(0, suffix, force=True)
 
     def update(self, count: int, suffix: str = "") -> None:
-        if not self.enabled:
+        if not self._active:
             return
         if not self._started:
             self._started = True
@@ -64,27 +74,39 @@ class ProgressReporter:
         self._emit(count, suffix, force=is_last)
 
     def done(self, suffix: str = "") -> None:
-        if not self.enabled:
+        if not self._active:
             return
         # Ensure a final 100% line, then terminate it.
         self._emit(self.total, suffix, force=True)
-        if self.is_tty:
+        if self.enabled and self.is_tty:
             self.stream.write("\n")
-        self.stream.flush()
+        if self.enabled:
+            self.stream.flush()
 
     def _emit(self, count: int, suffix: str, *, force: bool) -> None:
         now = time.monotonic()
         pct = int(count * 100 / self.total) if self.total else 100
-        bar = self._render(count, pct, suffix)
-        if self.is_tty:
-            self.stream.write("\r" + bar + "\033[K")
-        else:
-            # Non-TTY: only newline-print on percent change or when forced,
-            # to keep captured logs from ballooning.
-            if not force and pct == self._last_pct:
-                return
-            self.stream.write(bar + "\n")
-        self.stream.flush()
+        # Fire the GUI callback first so it is driven even when the stderr bar
+        # is disabled (a quiet backend call with only a callback attached).
+        if self.on_progress is not None and (force or pct != self._last_pct):
+            try:
+                self.on_progress(self.label, count, self.total)
+            except Exception:
+                # A misbehaving UI callback must never abort the backend work.
+                pass
+        if self.enabled:
+            bar = self._render(count, pct, suffix)
+            if self.is_tty:
+                self.stream.write("\r" + bar + "\033[K")
+            else:
+                # Non-TTY: only newline-print on percent change or when forced,
+                # to keep captured logs from ballooning.
+                if not force and pct == self._last_pct:
+                    self._last_emit = now
+                    self._last_pct = pct
+                    return
+                self.stream.write(bar + "\n")
+            self.stream.flush()
         self._last_emit = now
         self._last_pct = pct
 

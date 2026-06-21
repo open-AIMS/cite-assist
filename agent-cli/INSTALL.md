@@ -29,9 +29,10 @@ git --version
 
 ## 2. Choose the install location
 
-Choose the install path for the harness the user wants to use. The repository
-root is the skill folder, so the target directory must be the final
-`cite-assist` folder that will contain `SKILL.md`.
+Choose the install path for the harness the user wants to use. The repository's
+`agent-cli/` folder is the skill, so the target directory is the final
+`cite-assist` folder that will contain `SKILL.md`, `refcite/`, and
+`cite-assist.toml`.
 
 | Path | Used by |
 |------|---------|
@@ -51,19 +52,37 @@ Set `SKILL_DIR` to the chosen path and use it for every command below:
 SKILL_DIR="$HOME/.codex/skills/cite-assist"  # replace with the chosen path
 ```
 
-## 3. Clone the repository into that folder
+## 3. Install the skill folder
 
-CONFIRM the target path with the user, then:
+The skill is the repository's `agent-cli/` folder, not the whole repository: the
+repo also holds two other implementations (`agent-app/` and
+`agent-no-python-cli/`). Clone the repository to a source location, then put
+`agent-cli/` at `$SKILL_DIR`.
+
+CONFIRM the target path with the user, then clone:
 
 ```bash
-git clone https://github.com/open-AIMS/cite-assist "$SKILL_DIR"
+SRC="$HOME/.cite-assist/src"
+git clone https://github.com/open-AIMS/cite-assist "$SRC"
 ```
 
-The repository root is the skill. It contains `SKILL.md`, `refcite/`,
-`cite-assist.toml`, `README.md`, and `DESIGN.md`. A normal `git clone` leaves a
-`.git/` folder in the skill directory; that is fine and makes updates easier.
-After cloning, reload or restart the agent harness if needed so it discovers the
-new skill.
+Then make `$SKILL_DIR` the `agent-cli` folder. Prefer a symlink so
+`git -C "$SRC" pull` keeps the skill up to date (where the OS supports it):
+
+```bash
+ln -s "$SRC/agent-cli" "$SKILL_DIR"
+```
+
+If symlinks are unavailable (some Windows setups), copy instead; updates then
+require re-copying:
+
+```bash
+cp -r "$SRC/agent-cli" "$SKILL_DIR"
+```
+
+The skill folder contains `SKILL.md`, `refcite/`, `cite-assist.toml`,
+`README.md`, and `DESIGN.md`. After installing, reload or restart the agent
+harness if needed so it discovers the new skill.
 
 ## 4. Verify the tool runs
 
@@ -149,6 +168,9 @@ installed. From here, the user can select report text and invoke the
 
 ## Updating and removing
 
-- Update: `git -C "$SKILL_DIR" pull`.
-- Uninstall: delete the skill folder, and if desired the cache at
-  `~/.cite-assist/`. CONFIRM before deleting anything.
+- Update (symlink install): `git -C "$SRC" pull`.
+- Update (copy install): re-run `cp -r "$SRC/agent-cli" "$SKILL_DIR"` after a
+  `git -C "$SRC" pull`.
+- Uninstall: remove `$SKILL_DIR` (the symlink or copied folder), and if desired
+  the clone at `$SRC` and the cache at `~/.cite-assist/`. CONFIRM before deleting
+  anything.

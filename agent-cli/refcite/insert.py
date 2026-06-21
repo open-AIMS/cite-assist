@@ -199,6 +199,22 @@ def _find_span(line: str, sentence: str) -> tuple[int, int] | None:
     return None
 
 
+def sentence_matches(document: str, sentence: str) -> bool:
+    """True if ``sentence`` can be located verbatim in ``document`` (A33/A34).
+
+    Reuses the exact whitespace-run-equivalent matcher ``insert`` uses to locate
+    a sentence, scanning every line. A sentence that passes this check is one
+    ``insert`` can later find, so app mode's verbatim verification (A20) cannot
+    accept a sentence that insertion would then fail to place.
+    """
+    if not sentence or not sentence.strip():
+        return False
+    for line in document.split("\n"):
+        if _find_span(line, sentence) is not None:
+            return True
+    return False
+
+
 def _norm(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", text.lower())
 

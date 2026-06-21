@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="790" viewBox="0 0 800 790" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowGrey" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="800" height="790" fill="#ffffff"/>
+  <text x="400" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">cite-assist workflow</text>
+  <text x="400" y="54" text-anchor="middle" font-size="13" fill="#64748b">the high-level loop shared by all three implementations</text>
+
+  <!-- ============ main column boxes ============ -->
+  <!-- 1 author -->
+  <rect x="180" y="74" width="440" height="50" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="400" y="104" text-anchor="middle" font-size="14" fill="#0f172a">1.  Author selects text in the report</text>
+
+  <!-- 2 agent -->
+  <rect x="180" y="152" width="440" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="400" y="182" text-anchor="middle" font-size="14" fill="#0f172a">2.  Agent proposes the citable statements</text>
+
+  <!-- 3 author -->
+  <rect x="180" y="230" width="440" height="50" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="400" y="260" text-anchor="middle" font-size="14" fill="#0f172a">3.  Author confirms, drops or adds statements</text>
+
+  <!-- 4 agent finds candidates -->
+  <rect x="180" y="308" width="440" height="58" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="400" y="332" text-anchor="middle" font-size="14" fill="#0f172a">4.  Agent finds candidate citations</text>
+  <text x="400" y="350" text-anchor="middle" font-size="12" fill="#475569">searches the Zotero library for supporting sources</text>
+
+  <!-- 5 agent shortlists -->
+  <rect x="180" y="394" width="440" height="58" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="400" y="418" text-anchor="middle" font-size="14" fill="#0f172a">5.  Agent reviews and shortlists the candidates</text>
+  <text x="400" y="436" text-anchor="middle" font-size="12" fill="#475569">keeps the strongest matches for each statement</text>
+
+  <!-- 6 author reviews -->
+  <rect x="180" y="480" width="440" height="58" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="400" y="504" text-anchor="middle" font-size="14" fill="#0f172a">6.  Author reviews the candidates</text>
+  <text x="400" y="522" text-anchor="middle" font-size="12" fill="#475569">and chooses which to keep</text>
+
+  <!-- 7 agent inserts -->
+  <rect x="180" y="566" width="440" height="58" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="400" y="590" text-anchor="middle" font-size="14" fill="#0f172a">7.  Agent inserts citations and references</text>
+  <text x="400" y="608" text-anchor="middle" font-size="12" fill="#475569">APA in-text cites + a shared reference list</text>
+
+  <!-- done -->
+  <rect x="180" y="652" width="440" height="50" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.5"/>
+  <text x="400" y="682" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Done: citations in the report</text>
+
+  <!-- ============ vertical arrows ============ -->
+  <g stroke="#475569" stroke-width="1.6" fill="none" marker-end="url(#arrow)">
+    <line x1="400" y1="124" x2="400" y2="150"/>
+    <line x1="400" y1="202" x2="400" y2="228"/>
+    <line x1="400" y1="280" x2="400" y2="306"/>
+    <line x1="400" y1="366" x2="400" y2="392"/>
+    <line x1="400" y1="452" x2="400" y2="478"/>
+    <line x1="400" y1="538" x2="400" y2="564"/>
+    <line x1="400" y1="624" x2="400" y2="650"/>
+  </g>
+
+  <!-- ============ external services ============ -->
+  <!-- Zotero (left of step 4) -->
+  <rect x="20" y="312" width="140" height="50" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="90" y="335" text-anchor="middle" font-size="13" fill="#334155">Zotero library</text>
+  <text x="90" y="352" text-anchor="middle" font-size="11" fill="#64748b">the author's sources</text>
+
+  <!-- report outputs (right of step 7) -->
+  <rect x="640" y="570" width="140" height="50" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="710" y="593" text-anchor="middle" font-size="13" fill="#334155">report .md files</text>
+  <text x="710" y="610" text-anchor="middle" font-size="11" fill="#64748b">references.md</text>
+
+  <!-- branch arrows -->
+  <g stroke="#94a3b8" stroke-width="1.4" fill="none" marker-end="url(#arrowGrey)" marker-start="url(#arrowGrey)">
+    <line x1="160" y1="337" x2="180" y2="337"/>
+  </g>
+  <g stroke="#94a3b8" stroke-width="1.4" fill="none" marker-end="url(#arrowGrey)">
+    <line x1="620" y1="595" x2="640" y2="595"/>
+  </g>
+
+  <!-- ============ legend ============ -->
+  <g font-size="12.5" fill="#0f172a">
+    <rect x="180" y="730" width="18" height="14" rx="3" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="204" y="742">Author (human)</text>
+    <rect x="330" y="730" width="18" height="14" rx="3" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="354" y="742">Agent (any implementation)</text>
+    <rect x="545" y="730" width="18" height="14" rx="3" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="3 2"/>
+    <text x="569" y="742">External library / files</text>
+  </g>
+</svg>

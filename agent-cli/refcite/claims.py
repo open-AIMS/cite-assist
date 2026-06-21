@@ -13,8 +13,10 @@ format stays in one place.
 
 from __future__ import annotations
 
+import datetime as _dt
 import json
 import os
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -118,6 +120,34 @@ def save_claims(path: str | Path, data: dict) -> None:
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+# --- session scaffolding (A19) -------------------------------------------
+
+def slugify(text: str, max_len: int = 30) -> str:
+    """Lowercase, hyphenate, and trim a name into a filesystem-safe slug."""
+    slug = re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
+    return (slug[:max_len].rstrip("-")) or "session"
+
+
+def create_session(cfg, slug: str, *, today: str | None = None) -> Path:
+    """Scaffold ``active/<date>_<slug>[-N]/work`` and return the session folder.
+
+    Unlike the CLI's ``new-session`` (which hard-errors on a name collision so
+    the agent notices a duplicate), app mode runs unattended and must not fail
+    when the same report is processed twice in a day, so a colliding name gets
+    an incrementing ``-2``, ``-3``, ... suffix until unique (A19). The caller
+    writes ``work/claims.json`` afterwards.
+    """
+    date = today or _dt.date.today().isoformat()
+    base = f"{date}_{slugify(slug)}"
+    name, n = base, 1
+    while (cfg.active_dir / name).exists():
+        n += 1
+        name = f"{base}-{n}"
+    session_dir = cfg.active_dir / name
+    (session_dir / "work").mkdir(parents=True)
+    return session_dir
 
 
 # --- candidate construction ---------------------------------------------

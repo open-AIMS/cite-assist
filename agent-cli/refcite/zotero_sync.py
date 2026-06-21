@@ -72,7 +72,7 @@ def diagnose(exc: Exception, url: str = "") -> str:
     Distinguishes the three cases the user actually hits: the local API being
     disabled (403), Zotero not running / unreachable, and everything else.
     """
-    where = url or "http://localhost:23119"
+    where = url or "http://127.0.0.1:23119"
     if isinstance(exc, urllib.error.HTTPError):
         if exc.code == 403:
             return ENABLE_LOCAL_API_INSTRUCTIONS
@@ -104,16 +104,35 @@ def check_connection(cfg: Config, timeout: int = 8) -> dict:
     }
 
 
+def zotero_select_uri(record: Record, cfg: Config) -> str:
+    """Build a ``zotero://select`` deep link for ``record`` (A13).
+
+    Handing the URI to the OS makes a running Zotero desktop jump to the item.
+    The path differs for a group library, so it is derived from the config's
+    library type/id rather than hard-coded (validated in spike 03).
+    """
+    key = record.zotero_key
+    if cfg.zotero_library_type == "group":
+        return f"zotero://select/groups/{cfg.zotero_library_id}/items/{key}"
+    return f"zotero://select/library/items/{key}"
+
+
 # --- public entry point --------------------------------------------------
 
 def sync(cfg: Config, *, force_full: bool = False, csljson_path: str | None = None,
-         limit: int | None = None, verbose: bool = True) -> dict:
-    """Update the cache. Never raises for an offline/empty Zotero — warns instead."""
+         limit: int | None = None, verbose: bool = True, on_progress=None) -> dict:
+    """Update the cache. Never raises for an offline/empty Zotero — warns instead.
+
+    ``on_progress(label, current, total)`` (A22) is an optional callback the GUI
+    passes to surface live progress; the CLI passes none and is unaffected.
+    """
     if csljson_path:
-        return sync_from_csljson(cfg, cfg.resolve(csljson_path), verbose=verbose)
+        return sync_from_csljson(cfg, cfg.resolve(csljson_path), verbose=verbose,
+                                 on_progress=on_progress)
 
     try:
-        return _sync_live(cfg, force_full=force_full, limit=limit, verbose=verbose)
+        return _sync_live(cfg, force_full=force_full, limit=limit, verbose=verbose,
+                          on_progress=on_progress)
     except (urllib.error.URLError, ZoteroError, OSError, json.JSONDecodeError) as exc:
         reason = diagnose(exc, cfg.zotero_api_url)
         if cfg.csljson_export:
@@ -128,7 +147,8 @@ def sync(cfg: Config, *, force_full: bool = False, csljson_path: str | None = No
 
 # --- CSL-JSON file path --------------------------------------------------
 
-def sync_from_csljson(cfg: Config, path: Path, *, verbose: bool = True) -> dict:
+def sync_from_csljson(cfg: Config, path: Path, *, verbose: bool = True,
+                      on_progress=None) -> dict:
     """Rebuild the cache from a CSL-JSON export file (full, version-agnostic)."""
     items = json.loads(Path(path).read_text(encoding="utf-8"))
     if isinstance(items, dict):
@@ -138,7 +158,8 @@ def sync_from_csljson(cfg: Config, path: Path, *, verbose: bool = True) -> dict:
         print(f"Building cache from {len(entries)} CSL-JSON items in {path}...",
               file=sys.stderr)
     manifest = store.load_manifest(cfg.manifest_path)
-    result = _apply(cfg, manifest, entries, remove_missing=True, verbose=verbose)
+    result = _apply(cfg, manifest, entries, remove_missing=True, verbose=verbose,
+                    on_progress=on_progress)
     result["status"] = "ok"
     result["source"] = "csljson"
     if verbose:
@@ -149,7 +170,7 @@ def sync_from_csljson(cfg: Config, path: Path, *, verbose: bool = True) -> dict:
 # --- live local API path -------------------------------------------------
 
 def _sync_live(cfg: Config, *, force_full: bool, limit: int | None = None,
-               verbose: bool) -> dict:
+               verbose: bool, on_progress=None) -> dict:
     manifest = store.load_manifest(cfg.manifest_path)
     stored_version = 0 if force_full else int(manifest.get("library_version", 0))
 
@@ -212,7 +233,7 @@ def _sync_live(cfg: Config, *, force_full: bool, limit: int | None = None,
     result = _apply(cfg, manifest, _fetch_entries(), total=total,
                     remove_missing=force_full and not limited, remove_keys=removed_keys,
                     verbose=verbose, label="Fetching items from Zotero",
-                    progress_min=1)
+                    progress_min=1, on_progress=on_progress)
     # Advance the version even for a capped run, so the limited cache behaves like
     # a smaller library: a follow-up `sync` is a no-op and only genuine edits are
     # re-fetched. `--full` ignores the version, so it always rebuilds everything.
@@ -427,7 +448,7 @@ def _apply(cfg: Config, manifest: dict, entries,
            *, total: int | None = None, remove_missing: bool,
            remove_keys: list[str] | None = None, verbose: bool = False,
            label: str = "Writing records",
-           progress_min: int = _WRITE_PROGRESS_MIN) -> dict:
+           progress_min: int = _WRITE_PROGRESS_MIN, on_progress=None) -> dict:
     items = manifest.setdefault("items", {})
     key_to_rid = {meta.get("zotero_key"): rid for rid, meta in items.items()
                   if meta.get("zotero_key")}
@@ -442,9 +463,11 @@ def _apply(cfg: Config, manifest: dict, entries,
 
     # Show a bar only when there is enough work to be worth it. The live sync
     # passes progress_min=1 because every item is a slow network round trip even
-    # when only a few changed.
+    # when only a few changed. The GUI callback (A22), when present, fires
+    # regardless of the stderr bar's enabled state.
     write_progress = ProgressReporter(
-        label, total, enabled=verbose and total >= progress_min)
+        label, total, enabled=verbose and total >= progress_min,
+        on_progress=on_progress)
     write_progress.start()
     for processed, entry in enumerate(entries, 1):
         csl_item, fulltext, collections = entry[0], entry[1], entry[2]

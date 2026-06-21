@@ -174,7 +174,7 @@ def _emb_meta_path(cfg: Config) -> Path:
     return index_path(cfg) / "meta.json"
 
 
-def build_index(cfg: Config, verbose: bool = True) -> dict:
+def build_index(cfg: Config, verbose: bool = True, on_progress=None) -> dict:
     records = store.load_records(cfg.records_dir)
     fragments = build_fragments(records, min_words=cfg.fragment_min_words)
     if verbose:
@@ -186,12 +186,14 @@ def build_index(cfg: Config, verbose: bool = True) -> dict:
         backend.build(fragments)
         backend.save(index_path(cfg))
         stats = {"embedded": 0, "reused": 0}
+        if on_progress is not None:
+            on_progress("Indexing fragments", len(fragments), len(fragments))
     else:
         # embeddings + hybrid: shard the vectors, embedding only what changed.
         emb = EmbeddingsBackend(cfg.emb_server, cfg.emb_url, cfg.emb_model,
                                 cfg.emb_num_shards)
         progress = ProgressReporter("Embedding fragments", len(fragments),
-                                    enabled=verbose)
+                                    enabled=verbose, on_progress=on_progress)
         stats = emb.build_sharded(fragments, index_path(cfg),
                                   progress=progress, verbose=verbose)
 
@@ -322,8 +324,13 @@ class HybridBackend(SearchBackend):
 # --- orchestration -------------------------------------------------------
 
 def run_search(cfg: Config, session_dir: str | Path, *, do_sync: bool = True,
-               collections: list[str] | None = None, verbose: bool = True) -> dict:
-    """Rank every claim in a session and (re)write its ``review.md``."""
+               collections: list[str] | None = None, verbose: bool = True,
+               on_progress=None) -> dict:
+    """Rank every claim in a session and (re)write its ``review.md``.
+
+    ``on_progress(label, current, total)`` (A22) is forwarded to the quick sync
+    and index rebuild so an embedding GUI can surface their progress.
+    """
     session_dir = Path(session_dir)
     claims_path = session_dir / "work" / "claims.json"
     if not claims_path.is_file():
@@ -332,7 +339,7 @@ def run_search(cfg: Config, session_dir: str | Path, *, do_sync: bool = True,
 
     if do_sync:
         try:
-            zotero_sync.sync(cfg, verbose=False)
+            zotero_sync.sync(cfg, verbose=False, on_progress=on_progress)
         except Exception as exc:  # never let a sync hiccup block a search
             zotero_sync._warn(f"quick sync skipped ({exc}); using existing cache.")
 
@@ -342,7 +349,7 @@ def run_search(cfg: Config, session_dir: str | Path, *, do_sync: bool = True,
     # just wrote new or updated records), so a single `search` call always
     # queries a current index. build_index is a no-op-cheap rebuild for BM25.
     if index_is_stale(cfg):
-        build_index(cfg, verbose=verbose)
+        build_index(cfg, verbose=verbose, on_progress=on_progress)
     backend = load_index(cfg)
 
     results: list[tuple[claims_mod.Claim, str, list]] = []
@@ -367,6 +374,10 @@ def run_search(cfg: Config, session_dir: str | Path, *, do_sync: bool = True,
         "searched": searched,
         "review": str(review_path),
         "records": len(records),
+        # Structured per-claim candidates (A32): ``[(Claim, status, [Candidate])]``.
+        # The GUI renders its recommendations view from these objects rather than
+        # re-parsing the human-facing review.md. Additive; the CLI ignores it.
+        "candidates": results,
     }
     if verbose:
         print(f"OK: searched {searched}/{len(doc.claims)} claims across "
