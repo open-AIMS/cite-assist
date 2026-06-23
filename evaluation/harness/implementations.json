@@ -1,0 +1,39 @@
+{
+  "agent-cli": {
+    "kind": "agent",
+    "src": "agent-cli",
+    "copy_to": ".github/skills/cite-assist",
+    "skill_name": "cite-assist",
+    "skill_dir": ".github/skills/cite-assist",
+    "report_file": "report.md",
+    "references_file": "references.md",
+    "sessions_dir": "citations",
+    "needs_cache": true,
+    "uses_refcite": true,
+    "toml_overrides": {
+      "[cache] dir": ".cite-assist/zotero-cache",
+      "[search] backend": "hybrid"
+    }
+  },
+  "agent-no-python-cli": {
+    "kind": "agent",
+    "src": "agent-no-python-cli",
+    "copy_to": ".github/skills/cite-assist-no-cli",
+    "skill_name": "cite-assist-no-cli",
+    "skill_dir": ".github/skills/cite-assist-no-cli",
+    "report_file": "report.md",
+    "references_file": "references.md",
+    "needs_cache": false,
+    "uses_refcite": false
+  },
+  "agent-app": {
+    "kind": "app",
+    "src": "agent-app",
+    "report_file": "report.md",
+    "references_file": "references.md",
+    "sessions_dir": "citations",
+    "needs_cache": true,
+    "uses_refcite": true,
+    "launch": "cd \"<REPO>\" && python app.py"
+  }
+}

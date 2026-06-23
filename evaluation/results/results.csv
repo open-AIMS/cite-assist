@@ -1,0 +1,3 @@
+run_id,datetime,impl,model,text,alignment_ok,citations_inserted,n_citable,n_good,n_ok,n_partial,n_wrong,n_miss,n_false_pos,n_spurious,n_align_fail,score,completed_no_steering,copilot_credits,tokens,seconds,notes
+cli_opus48_t1,2026-06-22T10:09:23+00:00,agent-cli,opus48,t1,True,True,6,2,0,0,2,2,1,0,0,-1.0,,,,,
+cli_opus48_t1_r1,2026-06-22T10:47:23+00:00,agent-cli,opus48,t1,True,True,6,2,0,0,2,2,1,0,0,-1.0,,,,,

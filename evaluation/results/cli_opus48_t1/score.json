@@ -1,0 +1,148 @@
+{
+  "score": -1.0,
+  "alignment_ok": true,
+  "citations_inserted": true,
+  "n_citable": 6,
+  "n_good": 2,
+  "n_ok": 0,
+  "n_partial": 0,
+  "n_wrong": 2,
+  "n_miss": 2,
+  "n_false_pos": 1,
+  "n_spurious": 0,
+  "n_align_fail": 0,
+  "details": [
+    {
+      "index": 0,
+      "outcome": "wrong",
+      "gold": [
+        "Roberts et al., 2002"
+      ],
+      "inserted": [
+        "hughes|2002"
+      ]
+    },
+    {
+      "index": 1,
+      "outcome": "good",
+      "gold": [
+        "Graham & Nash, 2013"
+      ],
+      "inserted": [
+        "grahamnash|2013"
+      ]
+    },
+    {
+      "index": 2,
+      "outcome": "miss",
+      "gold": [
+        "Richards & Day, 2018",
+        "Hoey et al., 2020",
+        "Pittman & Brown, 2011"
+      ],
+      "inserted": []
+    },
+    {
+      "index": 3,
+      "outcome": "false_positive",
+      "gold": [],
+      "inserted": [
+        "lawrey|2025"
+      ]
+    },
+    {
+      "index": 4,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 5,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 6,
+      "outcome": "good",
+      "gold": [
+        "Carter et al., 2021"
+      ],
+      "inserted": [
+        "carter|2021"
+      ]
+    },
+    {
+      "index": 7,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 8,
+      "outcome": "miss",
+      "gold": [
+        "Queensland Department of Transport and Main Roads, 2024"
+      ],
+      "inserted": []
+    },
+    {
+      "index": 9,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 10,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 11,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 12,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 13,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 14,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 15,
+      "outcome": "wrong",
+      "gold": [
+        "Director of National Parks, 2018"
+      ],
+      "inserted": [
+        "carter|2021"
+      ]
+    },
+    {
+      "index": 16,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    },
+    {
+      "index": 17,
+      "outcome": "ok_bare",
+      "gold": [],
+      "inserted": []
+    }
+  ]
+}

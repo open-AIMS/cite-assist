@@ -40,6 +40,45 @@ app is launched from. The dependency runs one way only; `refcite` never imports
 
 `agent-no-python-cli` shares no code with the other two; it is skill text only.
 
+## Evaluating the implementations
+
+The three implementations exist to be compared, so the repository also contains a
+self-contained **test harness** in [evaluation/](evaluation/). It measures whether
+a generic agent harness, or a skill file alone, can match the workflow backed by
+the purpose-built `refcite` CLI.
+
+Each test starts from a **gold dataset**: a short report passage in which the
+author's real APA citations are tagged inline. The harness strips those citations
+to a hint-free input, runs an implementation against it in an **isolated
+sandbox**, then scores the citations the implementation inserted back against the
+gold. The sandbox contains only the stripped input and the implementation, so the
+gold answers and the scorer are never visible to the agent under test.
+
+```mermaid
+flowchart LR
+    G["Gold dataset<br/>(citations tagged inline)"]
+    S["Sandbox<br/>stripped report +<br/>implementation"]
+    W["Implementation runs<br/>the workflow"]
+    E["Edited report<br/>+ references"]
+    R["Scored results"]
+    M["Metric 1: completion<br/>Metric 2: citation quality"]
+
+    G -->|"strip citations"| S
+    S --> W
+    W --> E
+    E -->|"align to gold + score"| R
+    R -->|"aggregate"| M
+```
+
+Two metrics come out of a run: **Metric 1**, whether the workflow completed
+without the operator having to steer it, and **Metric 2**, the quality of the
+inserted citations against the author's gold pools. It is a small-scale,
+single-author case study, framed as preliminary.
+
+The operator's guide — prerequisites and a step-by-step setup for running a
+test — is in [evaluation/README.md](evaluation/README.md). The formal protocol
+and scoring rubric are in [evaluation/harness/METHOD.md](evaluation/harness/METHOD.md).
+
 ## Where to start
 
 - **Install and use agent mode:** [agent-cli/README.md](agent-cli/README.md) and
@@ -49,6 +88,8 @@ app is launched from. The dependency runs one way only; `refcite` never imports
 - **No-Python-CLI design:** [agent-no-python-cli/DESIGN-agent-no-python-cli.md](agent-no-python-cli/DESIGN-agent-no-python-cli.md).
 - **Research goals and evaluation:** [docs/RESEARCH.md](docs/RESEARCH.md) and
   [docs/LESSONS.md](docs/LESSONS.md).
+- **Run the evaluation:** [evaluation/README.md](evaluation/README.md) (operator's
+  guide) and [evaluation/harness/METHOD.md](evaluation/harness/METHOD.md) (protocol).
 
 ## Repository layout
 
@@ -64,6 +105,11 @@ agent-app/             App mode: the tkinter desktop GUI
   DESIGN-app-mode.md
   tests/               app-mode tests
 agent-no-python-cli/   Skill-only implementation (no Python)
+evaluation/            Test harness comparing the three implementations
+  datasets/            Gold texts with citations tagged inline
+  harness/             make_run / score / analyze / check_refs + METHOD.md
+  run-index.csv        The planned run matrix
+  results/             Scored run artifacts and results.csv
 docs/                  Cross-cutting research notes (RESEARCH.md, LESSONS.md)
 paper/                 Conference abstract / submission material
 ```

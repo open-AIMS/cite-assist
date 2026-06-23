@@ -1,0 +1,12 @@
+{
+  "run_id": "cli_opus48_t1",
+  "impl": "agent-cli",
+  "model": "opus48",
+  "text": "t1",
+  "ranking": "",
+  "gold_path": "datasets/t1-reef-mapping.md",
+  "report_file": "report.md",
+  "references_file": "references.md",
+  "n_citable_gold": 6,
+  "created": "2026-06-22T09:45:23+00:00"
+}

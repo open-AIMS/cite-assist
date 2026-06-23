@@ -151,6 +151,7 @@ Flash**.
 | **Agent CLI** (SKILL + `refcite` Python backend + testing) | 15.3 h | $51.40 | $9.84 | $61.24 |
 | **Agent App** (`citeapp` layer over the shared backend) | 5.75 h | $39.60 | — | $39.60 |
 | **Agent No CLI** (SKILL file only) | 2 h | $2.76 | - | $2.76 |
+| **Test harness** | 4 hrs | $13.00 | - | $13.00
 
 We needed to refactor the repository layout to have three separate folders for the multiple implementations. This took 49 min and $4.
 
@@ -176,6 +177,22 @@ These totals are indicative of AI-assisted development by one experienced
 developer who already understood the problem domain; a different developer, model,
 or prompting style would shift them. Per-stage breakdowns (Stages A0–A4 in
 `DESIGN-app-mode.md`) were not timed separately and are not reported here.
+
+---
+
+## 7. Log of work
+
+This section just contains notes during the testing and use phase of the agents.
+2026-06-22: 1 hr 39 min
+We spent most of the time refining the test harness workflows. Getting the rebuilding
+of the sandbox correct, performing two runs of the cli agent, then analysing the 
+performance of the agent. This indicated that we probably need to improve the citations
+in the test text, indicating more acceptable citations and checking that the citations
+are as good as possible. We also need to potentially adjust the scoring. The agent-cli
+with claude opus 4.8 got 2 good, 2 wrong, 2 miss, 1 false-positive → −1.0, with the 
+existing scoring. This also indicates that we need text sections that we do for development
+and ones that we use for evaluation.
+
 
 ---
 
