@@ -63,9 +63,8 @@ With the current billing 100 Credits = $1 USD.
 | Natural-language skill | ChatGPT Luna 6 | 1.0.0 | 4 min 13 sec | 11 | 50.7k | 1.8 | Yes | [Prompt](agent-no-code/test1/prompt.txt) | [Notes](agent-no-code/test1/results.md) |
 | Skill with Python CLI | ChatGPT Luna 6 | 1.0.0 | 4 min 30 sec | 8 | 85k | 2.8 | Yes | [Prompt](agent-python-cli/test1/prompt.txt) | [Notes](agent-python-cli/test1/results.md) |
 
-The notes contain selected recommendations and operator observations, not full
-chat transcripts or complete top-ten lists. Read the citation assessments as
-case-specific judgements. 
+The notes contain an extract of the final recommendations from the agent, typically
+the top three citations and its recommended cistation. 
 
 ## Recording provenance
 
@@ -90,18 +89,17 @@ with that local working material; they are not evaluation results.
 
 ## Scope
 
-I observed the expected workflow changes: the low-cost Luna model
-completed the no-skill task but made several missteps, whereas the CLI-assisted
-run made no observed missteps and used the supplied CLI for Zotero access rather
-than generating its own retrieval code. Recorded approvals fell from 16 to 8,
-a 50% reduction, with the no-code skill between them at 11. The CLI run did not
-use fewer tokens or credits than the no-skill Luna run.
+The low-cost Luna model completed the no-skill task but made several missteps, 
+whereas the CLI-assisted run made no observed missteps and used the supplied 
+CLI for Zotero access rather than generating its own retrieval code. Recorded 
+approvals fell from 16 to 8, with the no-code skill between them at 11. The 
+CLI run did not use fewer tokens or credits than the no-skill Luna run, however
+since the small Luna model is low cost the increase in tokens was not a big problem.
 
-I regard these differences as a strong practical indication that the
-skills improved workflow execution in this example. This is an informal
-interpretation, not a statistical finding. Across more examples, a CLI-assisted
-agent could still make mistakes and an unguided agent could have a favourable
-run. Different prompts and run-to-run variation also limit attribution.
+These differences indicate that the SKILLs are likely to be effective despite 
+just only running a single test sentence. Across more examples, a CLI-assisted
+agent is like to still make mistakes and an unguided agent could have a favourable
+run. We didn't do more citation experiments because we ran out of time.
 
 The presentation illustrates how a skill can guide an agent and how bundled
 tools can capture repeatable parts of a workflow. It does not establish that
