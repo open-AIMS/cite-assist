@@ -1,0 +1,7 @@
+{
+  "cite_assist_repo": "../..",
+  "datasets_dir": "datasets",
+  "sandboxes_dir": "sandboxes",
+  "results_dir": "results",
+  "min_samples_for_quality": 3
+}

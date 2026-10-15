@@ -1,0 +1,3 @@
+I want help to find the best references for the following sentence from Zotero. This sentence probably requires two citations. Give me the top 10 papers to consider, please rank them.
+
+The European Space Agency Sentinel 2 satellite images most of Australia’s marine estate every five days at 10 m resolution, but individual scenes are frequently obscured by clouds, sun glint, turbid water and sensor noise.

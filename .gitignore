@@ -6,3 +6,5 @@ __pycache__/
 paper/
 citations/
 .VSCodeCounter
+_local/
+.cite-assist-work-*/
